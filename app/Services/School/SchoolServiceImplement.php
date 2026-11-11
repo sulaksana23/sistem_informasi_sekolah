@@ -43,6 +43,22 @@ class SchoolServiceImplement extends Service
         return $this->mainRepository->masterDataSummary();
     }
 
+    public function profile(): array
+    {
+        return $this->mainRepository->schoolProfile();
+    }
+
+    public function updateProfile(array $data): void
+    {
+        // Kolom opsional yang dikosongkan dikirim sebagai string kosong oleh
+        // form; simpan sebagai null supaya konsisten dengan kolom nullable.
+        $data = array_map(
+            fn ($value) => $value === '' ? null : $value,
+            $data,
+        );
+        $this->mainRepository->updateSchoolProfile($data);
+    }
+
     public function catalog(string $section): array
     {
         abort_unless(isset(self::CATALOGS[$section]), 404);
@@ -86,8 +102,11 @@ class SchoolServiceImplement extends Service
         abort_unless(isset(self::CATALOGS[$section]), 404);
         if ($section === 'classes') {
             $exists = $this->mainRepository->classSectionExists((int) $data['grade_level'], $data['section'], $id);
-            if ($exists) throw ValidationException::withMessages(['section' => 'Tingkat dan rombel tersebut sudah terdaftar.']);
+            if ($exists) {
+                throw ValidationException::withMessages(['section' => 'Tingkat dan rombel tersebut sudah terdaftar.']);
+            }
         }
+
         return $this->mainRepository->saveCatalog($section, $id, $data);
     }
 
@@ -118,6 +137,7 @@ class SchoolServiceImplement extends Service
                 'records' => $data['records'], 'year_options' => $data['years'], 'selected_year' => $yearId,
             ];
         }
+
         return [
             'title' => 'Penugasan Guru', 'description' => 'Hubungkan guru, kelas, mata pelajaran, dan tahun ajaran.', 'type' => $type,
             'fields' => [
@@ -169,9 +189,12 @@ class SchoolServiceImplement extends Service
         $yearId = (int) ($filters['academic_year_id'] ?? $this->activeYearId($years));
         $classes = $this->mainRepository->availableClasses($user, $yearId ?: null);
         $classId = (int) ($filters['school_class_id'] ?? ($classes[0]['value'] ?? 0));
-        if ($classId && ! collect($classes)->contains(fn ($row) => (int) $row['value'] === $classId)) abort(403);
+        if ($classId && ! collect($classes)->contains(fn ($row) => (int) $row['value'] === $classId)) {
+            abort(403);
+        }
         $date = $filters['attendance_date'] ?? now()->toDateString();
         $roster = $classId && $yearId ? $this->mainRepository->attendanceRoster($classId, $yearId, $date) : [];
+
         return [
             'years' => $years, 'classes' => $classes, 'selected_year' => $yearId ?: null,
             'selected_class' => $classId ?: null, 'selected_date' => $date,
@@ -181,11 +204,14 @@ class SchoolServiceImplement extends Service
 
     public function saveAttendance(User $user, array $data): void
     {
-        $classId = (int) $data['school_class_id']; $yearId = (int) $data['academic_year_id'];
+        $classId = (int) $data['school_class_id'];
+        $yearId = (int) $data['academic_year_id'];
         abort_unless($this->mainRepository->teacherCanAccess($user, $classId, $yearId), 403);
         $expected = collect($this->mainRepository->attendanceRoster($classId, $yearId, $data['attendance_date']))->pluck('enrollment_id')->map(fn ($id) => (int) $id)->sort()->values();
         $provided = collect($data['students'])->pluck('enrollment_id')->map(fn ($id) => (int) $id)->sort()->values();
-        if ($expected->all() !== $provided->all()) throw ValidationException::withMessages(['students' => 'Daftar siswa berubah. Muat ulang halaman sebelum menyimpan absensi.']);
+        if ($expected->all() !== $provided->all()) {
+            throw ValidationException::withMessages(['students' => 'Daftar siswa berubah. Muat ulang halaman sebelum menyimpan absensi.']);
+        }
         if (! $this->mainRepository->classAndYearShareTenant($classId, $yearId)) {
             throw ValidationException::withMessages(['school_class_id' => 'Kelas dan tahun ajaran bukan milik sekolah aktif.']);
         }
@@ -198,13 +224,18 @@ class SchoolServiceImplement extends Service
         $yearId = (int) ($filters['academic_year_id'] ?? $this->activeYearId($years));
         $classes = $this->mainRepository->availableClasses($user, $yearId ?: null);
         $classId = (int) ($filters['school_class_id'] ?? ($classes[0]['value'] ?? 0));
-        if ($classId && ! collect($classes)->contains(fn ($row) => (int) $row['value'] === $classId)) abort(403);
+        if ($classId && ! collect($classes)->contains(fn ($row) => (int) $row['value'] === $classId)) {
+            abort(403);
+        }
         $subjects = $classId && $yearId ? $this->mainRepository->availableSubjects($user, $classId, $yearId) : [];
         $subjectId = (int) ($filters['subject_id'] ?? ($subjects[0]['value'] ?? 0));
-        if ($subjectId && ! collect($subjects)->contains(fn ($row) => (int) $row['value'] === $subjectId)) abort(403);
+        if ($subjectId && ! collect($subjects)->contains(fn ($row) => (int) $row['value'] === $subjectId)) {
+            abort(403);
+        }
         $assessment = trim((string) ($filters['assessment_name'] ?? 'Penilaian 1')) ?: 'Penilaian 1';
         $roster = $classId && $yearId && $subjectId ? $this->mainRepository->gradeRoster($classId, $yearId, $subjectId, $assessment) : [];
         $maxScore = $filters['max_score'] ?? ($roster[0]['max_score'] ?? 100);
+
         return [
             'years' => $years, 'classes' => $classes, 'subjects' => $subjects,
             'selected_year' => $yearId ?: null, 'selected_class' => $classId ?: null, 'selected_subject' => $subjectId ?: null,
@@ -215,7 +246,9 @@ class SchoolServiceImplement extends Service
 
     public function saveGrades(User $user, array $data): void
     {
-        $classId = (int) $data['school_class_id']; $yearId = (int) $data['academic_year_id']; $subjectId = (int) $data['subject_id'];
+        $classId = (int) $data['school_class_id'];
+        $yearId = (int) $data['academic_year_id'];
+        $subjectId = (int) $data['subject_id'];
         abort_unless($this->mainRepository->teacherCanAccess($user, $classId, $yearId, $subjectId), 403);
         foreach ($data['students'] as $row) {
             if (isset($row['score']) && $row['score'] !== '' && (float) $row['score'] > (float) $data['max_score']) {
@@ -224,7 +257,9 @@ class SchoolServiceImplement extends Service
         }
         $expected = collect($this->mainRepository->gradeRoster($classId, $yearId, $subjectId, $data['assessment_name']))->pluck('enrollment_id')->map(fn ($id) => (int) $id)->sort()->values();
         $provided = collect($data['students'])->pluck('enrollment_id')->map(fn ($id) => (int) $id)->sort()->values();
-        if ($expected->all() !== $provided->all()) throw ValidationException::withMessages(['students' => 'Daftar siswa berubah. Muat ulang halaman sebelum menyimpan nilai.']);
+        if ($expected->all() !== $provided->all()) {
+            throw ValidationException::withMessages(['students' => 'Daftar siswa berubah. Muat ulang halaman sebelum menyimpan nilai.']);
+        }
         if (! $this->mainRepository->classYearSubjectShareTenant($classId, $yearId, $subjectId)) {
             throw ValidationException::withMessages(['subject_id' => 'Kelas, tahun ajaran, dan mata pelajaran bukan milik sekolah yang sama.']);
         }
@@ -241,6 +276,7 @@ class SchoolServiceImplement extends Service
         ])->all();
         $selectedClassExists = ! $classId || collect($classes)->contains(fn ($row) => (int) $row['value'] === $classId);
         abort_unless($selectedClassExists, 404);
+
         return [
             'years' => $years, 'classes' => $classes, 'selected_year' => $yearId ?: null, 'selected_class' => $classId,
             'summary' => $yearId ? $this->mainRepository->reportData($yearId, $classId) : [
@@ -258,7 +294,12 @@ class SchoolServiceImplement extends Service
 
     private function activeYearId(array $years): ?int
     {
-        foreach ($years as $year) if ($year['active']) return (int) $year['value'];
+        foreach ($years as $year) {
+            if ($year['active']) {
+                return (int) $year['value'];
+            }
+        }
+
         return isset($years[0]) ? (int) $years[0]['value'] : null;
     }
 

@@ -1,4 +1,4 @@
-import { LayoutGrid, Component, Package, Settings, UsersRound, BookOpenCheck, CalendarCheck2, ClipboardList, UserRoundCog, Database, UserPlus } from "lucide-react";
+import { LayoutGrid, Component, Package, Settings, UsersRound, BookOpenCheck, CalendarCheck2, ClipboardList, UserRoundCog, Database, UserPlus, Building2 } from "lucide-react";
 import { type MenuConfig } from "./types";
 import { route } from "ziggy-js";
 
@@ -40,6 +40,8 @@ export const EXAMPLE_MENU_SIDEBAR: MenuConfig = [
 // `permission: "{module}.view"` (nama yang sama dengan middleware can: di route).
 export const MENU_SIDEBAR: MenuConfig = [
     { title: "Dashboard", icon: LayoutGrid, path: route("dashboard", undefined, false) },
+    { heading: "Sekolah" },
+    { title: "Profil Sekolah", icon: Building2, path: route("school.profile.index", undefined, false) },
     { heading: "Master Data" },
     { title: "Ringkasan Master Data", icon: Database, path: route("school.master-data.index", undefined, false), permission: "school.manage" },
     { title: "Siswa", icon: UsersRound, path: route("school.students.index", undefined, false), permission: "school.manage" },

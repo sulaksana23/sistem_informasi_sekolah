@@ -32,8 +32,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/', fn () => redirect()->route('dashboard'))->name('home');
         Route::get('/dashboard', [SchoolController::class, 'dashboard'])->name('dashboard');
 
+        // Profil sekolah: semua anggota sekolah boleh melihat, hanya
+        // admin/staff (school.manage) yang boleh mengubah.
+        Route::get('/school/profile', [SchoolController::class, 'profile'])->name('school.profile.index');
+
         Route::middleware('can:school.manage')->prefix('school')->name('school.')->group(function () {
             Route::get('/master-data', [SchoolController::class, 'masterData'])->name('master-data.index');
+            Route::put('/profile', [SchoolController::class, 'updateProfile'])->name('profile.update');
             foreach (['students', 'teachers', 'classes', 'subjects', 'academic-years'] as $section) {
                 Route::get('/'.$section, [SchoolController::class, 'catalog'])->defaults('section', $section)->name($section.'.index');
             }

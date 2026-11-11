@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1460" viewBox="0 0 1400 1460" font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif" role="img" aria-label="Flowchart Proses End-to-End">
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#005f33"/></marker>
+<marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker>
+</defs>
+<rect width="1400" height="1460" fill="#ffffff"/>
+<text x="48" y="58" font-size="26" font-weight="700" fill="#0f172a" letter-spacing="-0.4">Flowchart Proses End-to-End</text>
+<text x="48" y="84" font-size="13" fill="#64748b">Alur lengkap dari pembuatan sekolah oleh operator sampai laporan akademik, termasuk jalur penolakan akses.</text>
+<line x1="48" y1="102" x2="1352" y2="102" stroke="#cbd5e1"/>
+<rect x="40" y="112" width="1320" height="274" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="7 5"/>
+<text x="58" y="136" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">FASE 1 — ONBOARDING OPERATOR</text>
+<rect x="40" y="400" width="1320" height="430" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="7 5"/>
+<text x="58" y="424" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">FASE 2 — AUTENTIKASI &amp; KONTROL AKSES</text>
+<rect x="40" y="844" width="1320" height="566" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="7 5"/>
+<text x="58" y="868" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">FASE 3 — OPERASIONAL AKADEMIK</text>
+<rect x="520" y="130" width="360" height="54" rx="27.0" fill="#eaf6f0" stroke="#005f33" stroke-width="1.5"/>
+<text x="700.0" y="162.0" font-size="14" font-weight="650" fill="#0f172a" text-anchor="middle">Mulai</text>
+<rect x="520" y="206" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="238" font-size="14" font-weight="650" fill="#0f172a">school:create-school &quot;Nama&quot;</text>
+<text x="538" y="258" font-size="11.5" fill="#64748b">Operator membuat tenant sekolah</text>
+<rect x="520" y="304" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="336" font-size="14" font-weight="650" fill="#0f172a">school:assign-member {email} {role}</text>
+<text x="538" y="356" font-size="11.5" fill="#64748b">Peran: admin | staff | teacher</text>
+<rect x="520" y="420" width="360" height="76" rx="10" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.5"/>
+<text x="538" y="452" font-size="14" font-weight="650" fill="#0f172a">Pengguna mendaftar akun</text>
+<text x="538" y="472" font-size="11.5" fill="#64748b">Tidak menerima pilihan peran</text>
+<rect x="520" y="508" width="360" height="76" rx="10" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.5"/>
+<text x="538" y="540" font-size="14" font-weight="650" fill="#0f172a">Login</text>
+<text x="538" y="560" font-size="11.5" fill="#64748b">Email + password · remember me</text>
+<polygon points="700.0,598 880,644.0 700.0,690 520,644.0" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+<text x="700.0" y="638" font-size="14" font-weight="650" fill="#0f172a" text-anchor="middle">Keanggotaan sah?</text>
+<text x="700.0" y="658" font-size="11.5" fill="#64748b" text-anchor="middle">school_memberships</text>
+<polygon points="700.0,708 880,754.0 700.0,800 520,754.0" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+<text x="700.0" y="748" font-size="14" font-weight="650" fill="#0f172a" text-anchor="middle">Gate peran lolos?</text>
+<text x="700.0" y="768" font-size="11.5" fill="#64748b" text-anchor="middle">school.manage | academic | report</text>
+<rect x="960" y="598" width="340" height="76" rx="10" fill="#fff1f2" stroke="#be123c" stroke-width="1.5"/>
+<text x="978" y="630" font-size="14" font-weight="650" fill="#0f172a">Halaman /no-school</text>
+<text x="978" y="650" font-size="11.5" fill="#64748b">Akun belum tergabung di sekolah</text>
+<rect x="960" y="708" width="340" height="76" rx="10" fill="#fff1f2" stroke="#be123c" stroke-width="1.5"/>
+<text x="978" y="740" font-size="14" font-weight="650" fill="#0f172a">403 Forbidden</text>
+<text x="978" y="760" font-size="11.5" fill="#64748b">Deny-by-default, tidak ada data</text>
+<rect x="520" y="858" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="890" font-size="14" font-weight="650" fill="#0f172a">Master data sekolah</text>
+<text x="538" y="910" font-size="11.5" fill="#64748b">Tahun ajaran · guru · kelas · mapel · siswa</text>
+<rect x="520" y="946" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="978" font-size="14" font-weight="650" fill="#0f172a">Penempatan siswa</text>
+<text x="538" y="998" font-size="11.5" fill="#64748b">Satu siswa = satu kelas per tahun ajaran</text>
+<rect x="520" y="1034" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="1066" font-size="14" font-weight="650" fill="#0f172a">Penugasan guru</text>
+<text x="538" y="1086" font-size="11.5" fill="#64748b">Guru × kelas × mapel × tahun ajaran</text>
+<rect x="520" y="1122" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="1154" font-size="14" font-weight="650" fill="#0f172a">Absensi harian &amp; nilai asesmen</text>
+<text x="538" y="1174" font-size="11.5" fill="#64748b">Guru dibatasi penugasan · nilai ≤ maksimum</text>
+<rect x="520" y="1210" width="360" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="538" y="1242" font-size="14" font-weight="650" fill="#0f172a">Laporan akademik</text>
+<text x="538" y="1262" font-size="11.5" fill="#64748b">Filter tahun/kelas · cetak · unduh CSV</text>
+<rect x="520" y="1310" width="360" height="54" rx="27.0" fill="#eaf6f0" stroke="#005f33" stroke-width="1.5"/>
+<text x="700.0" y="1342.0" font-size="14" font-weight="650" fill="#0f172a" text-anchor="middle">Selesai</text>
+<path d="M 700.0 184.0 L 700.0 206.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 282.0 L 700.0 304.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 380.0 L 700.0 420.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 496.0 L 700.0 508.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 584.0 L 700.0 598.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 690.0 L 700.0 708.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<rect x="487" y="694" width="26" height="18" rx="4" fill="#ffffff"/>
+<text x="500" y="707" font-size="10.5" fill="#64748b" text-anchor="middle">ya</text>
+<path d="M 700.0 800.0 L 700.0 858.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<rect x="547" y="800" width="26" height="18" rx="4" fill="#ffffff"/>
+<text x="560" y="813" font-size="10.5" fill="#64748b" text-anchor="middle">ya</text>
+<path d="M 880.0 644.0 L 960.0 636.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<rect x="888" y="624" width="45" height="18" rx="4" fill="#ffffff"/>
+<text x="910" y="637" font-size="10.5" fill="#64748b" text-anchor="middle">tidak</text>
+<path d="M 880.0 754.0 L 960.0 746.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<rect x="888" y="734" width="45" height="18" rx="4" fill="#ffffff"/>
+<text x="910" y="747" font-size="10.5" fill="#64748b" text-anchor="middle">tidak</text>
+<path d="M 1300.0 636.0 L 1330.0 636.0 L 1330.0 546.0 L 880.0 546.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<path d="M 700.0 934.0 L 700.0 946.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 1022.0 L 700.0 1034.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 1110.0 L 700.0 1122.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 1198.0 L 700.0 1210.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 700.0 1286.0 L 700.0 1310.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<text x="48" y="1442" font-size="10.5" fill="#64748b">Sumber: routes/web.php · app/Console/Commands · app/Http/Middleware/SetTenantContext.php · app/Providers/AppServiceProvider.php</text>
+</svg>

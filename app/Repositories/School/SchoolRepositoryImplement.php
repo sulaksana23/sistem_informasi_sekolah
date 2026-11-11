@@ -7,6 +7,7 @@ use App\Enums\SchoolRole;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
 use App\Models\Grade;
+use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\StudentEnrollment;
@@ -15,8 +16,8 @@ use App\Models\Teacher;
 use App\Models\TeacherAssignment;
 use App\Models\User;
 use App\Services\Tenancy\TenantContext;
-use Itmm\EasyRepository\Implementations\Eloquent;
 use Illuminate\Support\Facades\DB;
+use Itmm\EasyRepository\Implementations\Eloquent;
 
 class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
 {
@@ -82,6 +83,39 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
         ];
     }
 
+    public function schoolProfile(): array
+    {
+        $school = School::query()->findOrFail(TenantContext::active()->requireSchoolId());
+
+        return [
+            'id' => $school->id,
+            'name' => $school->name,
+            'npsn' => $school->npsn,
+            'level' => $school->level?->value,
+            'level_label' => $school->level?->label(),
+            'status' => $school->status?->value,
+            'status_label' => $school->status?->label(),
+            'address' => $school->address,
+            'phone' => $school->phone,
+            'email' => $school->email,
+            'website' => $school->website,
+            'headmaster_name' => $school->headmaster_name,
+            'accreditation' => $school->accreditation,
+            'founded_year' => $school->founded_year === null ? null : (int) $school->founded_year,
+            'description' => $school->description,
+            'created_at' => $school->created_at?->format('Y-m-d'),
+            'member_count' => $school->memberships()->count(),
+            'student_count' => Student::query()->count(),
+            'teacher_count' => Teacher::query()->count(),
+        ];
+    }
+
+    public function updateSchoolProfile(array $data): void
+    {
+        $school = School::query()->findOrFail(TenantContext::active()->requireSchoolId());
+        $school->fill($data)->save();
+    }
+
     public function masterDataSummary(): array
     {
         return [
@@ -123,7 +157,9 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
             'academic-years' => $record->enrollments()->exists() || $record->teacherAssignments()->exists(),
             default => false,
         };
-        if ($hasDependencies) return false;
+        if ($hasDependencies) {
+            return false;
+        }
         $record->delete();
 
         return true;
@@ -168,25 +204,37 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
         ];
     }
 
-    public function storeEnrollment(array $data): void { StudentEnrollment::query()->create($data); }
+    public function storeEnrollment(array $data): void
+    {
+        StudentEnrollment::query()->create($data);
+    }
 
     public function deleteEnrollment(int $id): bool
     {
         $row = StudentEnrollment::query()->findOrFail($id);
-        if ($row->attendances()->exists() || $row->grades()->exists()) return false;
+        if ($row->attendances()->exists() || $row->grades()->exists()) {
+            return false;
+        }
         $row->delete();
+
         return true;
     }
 
-    public function storeTeacherAssignment(array $data): void { TeacherAssignment::query()->create($data); }
+    public function storeTeacherAssignment(array $data): void
+    {
+        TeacherAssignment::query()->create($data);
+    }
 
     public function deleteTeacherAssignment(int $id): bool
     {
         $row = TeacherAssignment::query()->findOrFail($id);
         $hasGrades = Grade::query()->where('subject_id', $row->subject_id)->whereHas('enrollment', fn ($q) => $q
             ->where('school_class_id', $row->school_class_id)->where('academic_year_id', $row->academic_year_id))->exists();
-        if ($hasGrades) return false;
+        if ($hasGrades) {
+            return false;
+        }
         $row->delete();
+
         return true;
     }
 
@@ -196,12 +244,15 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
             ->where('academic_year_id', $yearId)->where('status', 'active')))->orderBy('grade_level')->orderBy('section');
         if (TenantContext::active()->role() === SchoolRole::TEACHER) {
             $teacherId = Teacher::query()->where('user_id', $user->id)->value('id');
-            if (! $teacherId) return [];
+            if (! $teacherId) {
+                return [];
+            }
             $query->where(function ($q) use ($teacherId, $yearId) {
                 $q->where('homeroom_teacher_id', $teacherId)->orWhereHas('teacherAssignments', fn ($a) => $a
                     ->where('teacher_id', $teacherId)->when($yearId, fn ($inner) => $inner->where('academic_year_id', $yearId)));
             });
         }
+
         return $query->get()->map(fn (SchoolClass $row) => ['value' => $row->id, 'label' => $row->name])->all();
     }
 
@@ -210,20 +261,30 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
         $query = Subject::query()->orderBy('name');
         if (TenantContext::active()->role() === SchoolRole::TEACHER) {
             $teacherId = Teacher::query()->where('user_id', $user->id)->value('id');
-            if (! $teacherId) return [];
+            if (! $teacherId) {
+                return [];
+            }
             $query->whereHas('teacherAssignments', fn ($a) => $a->where('teacher_id', $teacherId)
                 ->where('school_class_id', $classId)->where('academic_year_id', $yearId));
         }
+
         return $query->get()->map(fn (Subject $row) => ['value' => $row->id, 'label' => "{$row->code} · {$row->name}"])->all();
     }
 
     public function teacherCanAccess(User $user, int $classId, int $yearId, ?int $subjectId = null): bool
     {
-        if (TenantContext::active()->role() !== SchoolRole::TEACHER) return true;
+        if (TenantContext::active()->role() !== SchoolRole::TEACHER) {
+            return true;
+        }
         $teacherId = Teacher::query()->where('user_id', $user->id)->value('id');
-        if (! $teacherId) return false;
-        if ($subjectId) return TeacherAssignment::query()->where('teacher_id', $teacherId)->where('school_class_id', $classId)
-            ->where('academic_year_id', $yearId)->where('subject_id', $subjectId)->exists();
+        if (! $teacherId) {
+            return false;
+        }
+        if ($subjectId) {
+            return TeacherAssignment::query()->where('teacher_id', $teacherId)->where('school_class_id', $classId)
+                ->where('academic_year_id', $yearId)->where('subject_id', $subjectId)->exists();
+        }
+
         return TeacherAssignment::query()->where('teacher_id', $teacherId)->where('school_class_id', $classId)->where('academic_year_id', $yearId)->exists()
             || SchoolClass::query()->whereKey($classId)->where('homeroom_teacher_id', $teacherId)->exists();
     }
@@ -270,6 +331,7 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
             ->where('school_class_id', $classId)->where('academic_year_id', $yearId)->where('status', 'active')->orderBy('id')->get()
             ->map(function (StudentEnrollment $row) {
                 $attendance = $row->attendances->first();
+
                 return [
                     'enrollment_id' => $row->id, 'student_number' => $row->student->student_number,
                     'name' => $row->student->name, 'status' => $attendance?->status->value ?? 'present', 'note' => $attendance?->note ?? '',
@@ -280,10 +342,12 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
     public function saveAttendance(int $classId, int $yearId, string $date, array $students, int $userId): void
     {
         DB::transaction(function () use ($date, $students, $userId) {
-            foreach ($students as $row) Attendance::query()->updateOrCreate(
-                ['student_enrollment_id' => $row['enrollment_id'], 'attendance_date' => $date],
-                ['status' => $row['status'], 'note' => $row['note'] ?? null, 'recorded_by' => $userId],
-            );
+            foreach ($students as $row) {
+                Attendance::query()->updateOrCreate(
+                    ['student_enrollment_id' => $row['enrollment_id'], 'attendance_date' => $date],
+                    ['status' => $row['status'], 'note' => $row['note'] ?? null, 'recorded_by' => $userId],
+                );
+            }
         });
     }
 
@@ -293,6 +357,7 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
             ->where('school_class_id', $classId)->where('academic_year_id', $yearId)->where('status', 'active')->orderBy('id')->get()
             ->map(function (StudentEnrollment $row) {
                 $grade = $row->grades->first();
+
                 return [
                     'enrollment_id' => $row->id, 'student_number' => $row->student->student_number,
                     'name' => $row->student->name, 'score' => $grade?->score, 'max_score' => $grade?->max_score,
@@ -306,7 +371,9 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
         DB::transaction(function () use ($data, $userId) {
             foreach ($data['students'] as $row) {
                 $score = $row['score'] ?? null;
-                if ($score === null || $score === '') continue;
+                if ($score === null || $score === '') {
+                    continue;
+                }
                 Grade::query()->updateOrCreate(
                     ['student_enrollment_id' => $row['enrollment_id'], 'subject_id' => $data['subject_id'], 'assessment_name' => $data['assessment_name']],
                     ['assessment_date' => $data['assessment_date'] ?? null, 'score' => $score, 'max_score' => $data['max_score'],
@@ -322,6 +389,7 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
         $enrollments = StudentEnrollment::query()->when($yearId, fn ($q) => $q->where('academic_year_id', $yearId)->where('status', 'active'));
         $attendance = Attendance::query()->whereDate('attendance_date', now()->toDateString())
             ->whereHas('enrollment', fn ($q) => $q->when($yearId, fn ($inner) => $inner->where('academic_year_id', $yearId)));
+
         return [
             'students' => Student::query()->where('status', 'active')->count(),
             'teachers' => Teacher::query()->where('status', 'active')->count(),
@@ -344,6 +412,7 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
                 'average_score' => $row->grades()->selectRaw('AVG((score / max_score) * 100) as average_score')->value('average_score'),
             ])->all();
         $averages = array_values(array_filter(array_column($rows, 'average_score'), fn ($value) => $value !== null));
+
         return [
             'students' => count($rows), 'attendance_records' => array_sum(array_column($rows, 'attendance_count')),
             'present_records' => array_sum(array_column($rows, 'present_count')),

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="Sistem Informasi Sekolah">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#002b17"/>
+      <stop offset="0.5" stop-color="#005f33"/>
+      <stop offset="1" stop-color="#0b7a45"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dd3a8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#7dd3a8" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="grid" width="34" height="34" patternUnits="userSpaceOnUse">
+      <path d="M34 0H0V34" fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="320" fill="url(#bg)"/>
+  <rect width="1200" height="320" fill="url(#grid)"/>
+  <circle cx="1055" cy="60" r="210" fill="url(#glow)"/>
+  <circle cx="1090" cy="275" r="120" fill="#ffffff" fill-opacity="0.05"/>
+
+  <g transform="translate(72,74)">
+    <rect width="76" height="76" rx="18" fill="#ffffff" fill-opacity="0.12"/>
+    <rect x="0.75" y="0.75" width="74.5" height="74.5" rx="17.5" fill="none" stroke="#ffffff" stroke-opacity="0.45"/>
+    <path d="M38 16 L56 25 V43 C56 54 47.5 59.5 38 63 C28.5 59.5 20 54 20 43 V25 Z"
+          fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linejoin="round"/>
+    <path d="M29 38 l6.5 6.5 L48 31" fill="none" stroke="#a7f3d0" stroke-width="3.6"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="176" y="118" font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif"
+        font-size="42" font-weight="800" fill="#ffffff" letter-spacing="-0.6">Sistem Informasi Sekolah</text>
+  <text x="178" y="152" font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif"
+        font-size="17" fill="#c9f2dc">Administrasi &amp; akademik multi-sekolah dalam satu aplikasi</text>
+
+  <g font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600">
+    <rect x="178" y="178" width="122" height="30" rx="15" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="239" y="198" fill="#ffffff" text-anchor="middle">Laravel 13</text>
+    <rect x="310" y="178" width="104" height="30" rx="15" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="362" y="198" fill="#ffffff" text-anchor="middle">Inertia v2</text>
+    <rect x="424" y="178" width="112" height="30" rx="15" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="480" y="198" fill="#ffffff" text-anchor="middle">React 19</text>
+    <rect x="546" y="178" width="134" height="30" rx="15" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="613" y="198" fill="#ffffff" text-anchor="middle">TypeScript 5.9</text>
+    <rect x="690" y="178" width="116" height="30" rx="15" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="748" y="198" fill="#ffffff" text-anchor="middle">MariaDB</text>
+    <rect x="816" y="178" width="98" height="30" rx="15" fill="#ffffff" fill-opacity="0.14"/>
+    <text x="865" y="198" fill="#ffffff" text-anchor="middle">Docker</text>
+  </g>
+
+  <line x1="72" y1="248" x2="1128" y2="248" stroke="#ffffff" stroke-opacity="0.18"/>
+
+  <g font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif">
+    <text x="72" y="282" font-size="12" fill="#9fe6c0">Multi-tenant per sekolah</text>
+    <text x="268" y="282" font-size="12" fill="#9fe6c0">Peran admin · staff · guru</text>
+    <text x="486" y="282" font-size="12" fill="#9fe6c0">Absensi &amp; nilai</text>
+    <text x="650" y="282" font-size="12" fill="#9fe6c0">Laporan + ekspor CSV</text>
+    <text x="828" y="282" font-size="12" fill="#9fe6c0">Isolasi data fail-closed</text>
+  </g>
+</svg>

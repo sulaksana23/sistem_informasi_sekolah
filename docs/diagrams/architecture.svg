@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="940" viewBox="0 0 1400 940" font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif" role="img" aria-label="Arsitektur Sistem">
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#005f33"/></marker>
+<marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker>
+</defs>
+<rect width="1400" height="940" fill="#ffffff"/>
+<text x="48" y="58" font-size="26" font-weight="700" fill="#0f172a" letter-spacing="-0.4">Arsitektur Sistem</text>
+<text x="48" y="84" font-size="13" fill="#64748b">Lapisan runtime: klien Inertia, edge Nginx, inti Laravel, dan penyimpanan data.</text>
+<line x1="48" y1="102" x2="1352" y2="102" stroke="#cbd5e1"/>
+<rect x="40" y="122" width="360" height="280" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="58" y="146" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">KLIEN</text>
+<rect x="420" y="122" width="214" height="280" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="438" y="146" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">EDGE</text>
+<rect x="650" y="122" width="710" height="580" rx="14" fill="#eaf6f0" stroke="#005f33" stroke-width="1.2"/>
+<text x="668" y="146" font-size="10" font-weight="700" fill="#005f33" letter-spacing="1.1">APLIKASI</text>
+<rect x="40" y="730" width="1320" height="130" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="58" y="754" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">DATA</text>
+<rect x="60" y="160" width="320" height="131" rx="10" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.5"/>
+<rect x="74" y="150" width="64" height="20" rx="10" fill="#1d4ed8"/>
+<text x="106" y="164" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">CLIENT</text>
+<text x="78" y="204" font-size="14" font-weight="650" fill="#0f172a">Browser</text>
+<text x="78" y="224" font-size="11.5" fill="#64748b">React 19 · Inertia.js v2 (SPA)</text>
+<text x="78" y="241" font-size="11.5" fill="#64748b">TanStack Query v5 · Table v8</text>
+<text x="78" y="258" font-size="11.5" fill="#64748b">Radix UI · Tailwind CSS v4</text>
+<rect x="60" y="300" width="320" height="102" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="78" y="332" font-size="14" font-weight="650" fill="#0f172a">Vite 8</text>
+<text x="78" y="352" font-size="11.5" fill="#64748b">Dev server + HMR :5174</text>
+<text x="78" y="369" font-size="11.5" fill="#64748b">Build produksi → public/build</text>
+<rect x="440" y="160" width="178" height="102" rx="10" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+<text x="458" y="192" font-size="14" font-weight="650" fill="#0f172a">Nginx 1.27</text>
+<text x="458" y="212" font-size="11.5" fill="#64748b">Reverse proxy :8084</text>
+<text x="458" y="229" font-size="11.5" fill="#64748b">Serve aset statis</text>
+<rect x="440" y="300" width="178" height="102" rx="10" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+<text x="458" y="332" font-size="14" font-weight="650" fill="#0f172a">PHP-FPM 8.4</text>
+<text x="458" y="352" font-size="11.5" fill="#64748b">php-fpm + supervisord</text>
+<text x="458" y="369" font-size="11.5" fill="#64748b">UID/GID = host</text>
+<rect x="670" y="165" width="670" height="88" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<rect x="684" y="155" width="71" height="20" rx="10" fill="#005f33"/>
+<text x="720" y="169" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">LARAVEL</text>
+<text x="688" y="209" font-size="14" font-weight="650" fill="#0f172a">HTTP Kernel</text>
+<text x="688" y="229" font-size="11.5" fill="#64748b">HandleInertiaRequests · SetTenantContext</text>
+<rect x="670" y="255" width="670" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="688" y="287" font-size="14" font-weight="650" fill="#0f172a">Routing &amp; Middleware</text>
+<text x="688" y="307" font-size="11.5" fill="#64748b">auth · throttle · tenant.context · can:school.*</text>
+<rect x="670" y="341" width="670" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="688" y="373" font-size="14" font-weight="650" fill="#0f172a">Controller + FormRequest</text>
+<text x="688" y="393" font-size="11.5" fill="#64748b">Auth · Tenancy · School (18 aksi)</text>
+<rect x="670" y="427" width="670" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="688" y="459" font-size="14" font-weight="650" fill="#0f172a">Service Layer</text>
+<text x="688" y="479" font-size="11.5" fill="#64748b">AuthService · SchoolService · TenantService</text>
+<rect x="670" y="513" width="670" height="76" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="688" y="545" font-size="14" font-weight="650" fill="#0f172a">Repository — itmm/easy-repository</text>
+<text x="688" y="565" font-size="11.5" fill="#64748b">SchoolRepository · TenantRepository</text>
+<rect x="670" y="599" width="670" height="80" rx="10" fill="#d4ede1" stroke="#005f33" stroke-width="1.5"/>
+<path d="M 680 599 H 670 V 669 Q 670 679 680 679" fill="none" stroke="#005f33" stroke-width="3.5"/>
+<text x="688" y="631" font-size="14" font-weight="650" fill="#0f172a">Eloquent + trait BelongsToTenant</text>
+<text x="688" y="651" font-size="11.5" fill="#64748b">Global scope school_id · tanpa konteks = 0 baris</text>
+<rect x="60" y="770" width="300" height="97" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<rect x="74" y="760" width="50" height="20" rx="10" fill="#005f33"/>
+<text x="99" y="774" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">DATA</text>
+<text x="78" y="814" font-size="14" font-weight="650" fill="#0f172a">MariaDB 11</text>
+<text x="78" y="834" font-size="11.5" fill="#64748b">sistem_informasi_sekolah :3308</text>
+<rect x="390" y="770" width="280" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="408" y="802" font-size="14" font-weight="650" fill="#0f172a">Cache &amp; Queue</text>
+<text x="408" y="822" font-size="11.5" fill="#64748b">Driver database</text>
+<rect x="700" y="770" width="280" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="718" y="802" font-size="14" font-weight="650" fill="#0f172a">Session &amp; Log</text>
+<text x="718" y="822" font-size="11.5" fill="#64748b">current_school_id · laravel.log</text>
+<rect x="1010" y="770" width="330" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="1028" y="802" font-size="14" font-weight="650" fill="#0f172a">Docker Compose</text>
+<text x="1028" y="822" font-size="11.5" fill="#64748b">app · nginx · node · mariadb</text>
+<path d="M 380.0 225.5 L 440.0 211.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<rect x="391" y="206.25" width="39" height="18" rx="4" fill="#ffffff"/>
+<text x="410" y="219.25" font-size="10.5" fill="#64748b" text-anchor="middle">HTTP</text>
+<path d="M 529.0 262.0 L 529.0 300.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 618.0 351.0 L 670.0 209.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1005.0 253.0 L 1005.0 255.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1005.0 331.0 L 1005.0 341.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1005.0 417.0 L 1005.0 427.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1005.0 503.0 L 1005.0 513.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1005.0 589.0 L 1005.0 599.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1005.0 679.0 L 1005.0 715.0 L 210.0 715.0 L 210.0 770.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<rect x="591" y="703.0" width="33" height="18" rx="4" fill="#ffffff"/>
+<text x="608" y="716.0" font-size="10.5" fill="#64748b" text-anchor="middle">SQL</text>
+<path d="M 220.0 300.0 L 220.0 291.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<path d="M 670.0 465.0 L 600.0 465.0 L 600.0 745.0 L 530.0 745.0 L 530.0 770.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<rect x="578" y="593.0" width="45" height="18" rx="4" fill="#ffffff"/>
+<text x="600" y="606.0" font-size="10.5" fill="#64748b" text-anchor="middle">cache</text>
+<path d="M 1340.0 639.0 L 1345.0 639.0 L 1370.0 639.0 L 1370.0 745.0 L 840.0 745.0 L 840.0 770.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<rect x="1089" y="733.0" width="33" height="18" rx="4" fill="#ffffff"/>
+<text x="1105" y="746.0" font-size="10.5" fill="#64748b" text-anchor="middle">log</text>
+<text x="48" y="922" font-size="10.5" fill="#64748b">Sumber: docker-compose.yml · routes/web.php · app/Http · app/Services · app/Models/Concerns/BelongsToTenant.php</text>
+</svg>

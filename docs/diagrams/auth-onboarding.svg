@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="780" viewBox="0 0 1400 780" font-family="'Segoe UI', Inter, Helvetica, Arial, sans-serif" role="img" aria-label="Autentikasi &amp; Onboarding Sekolah">
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#005f33"/></marker>
+<marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker>
+</defs>
+<rect width="1400" height="780" fill="#ffffff"/>
+<text x="48" y="58" font-size="26" font-weight="700" fill="#0f172a" letter-spacing="-0.4">Autentikasi &amp; Onboarding Sekolah</text>
+<text x="48" y="84" font-size="13" fill="#64748b">Pendaftaran mandiri tidak memberi akses sekolah; keanggotaan dan peran hanya ditetapkan operator.</text>
+<line x1="48" y1="102" x2="1352" y2="102" stroke="#cbd5e1"/>
+<rect x="40" y="122" width="650" height="590" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="58" y="146" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">PENGGUNA</text>
+<rect x="720" y="122" width="640" height="590" rx="14" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="738" y="146" font-size="10" font-weight="700" fill="#94a3b8" letter-spacing="1.1">OPERATOR — SHELL TEPERCAYA</text>
+<rect x="70" y="160" width="270" height="114" rx="10" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.5"/>
+<rect x="84" y="150" width="64" height="20" rx="10" fill="#1d4ed8"/>
+<text x="116" y="164" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">PUBLIK</text>
+<text x="88" y="204" font-size="14" font-weight="650" fill="#0f172a">Daftar akun</text>
+<text x="88" y="224" font-size="11.5" fill="#64748b">POST /register · throttle 5/menit</text>
+<text x="88" y="241" font-size="11.5" fill="#64748b">Tidak menerima pilihan peran</text>
+<rect x="70" y="300" width="270" height="85" rx="10" fill="#ffffff" stroke="#be123c" stroke-width="1.5"/>
+<text x="88" y="332" font-size="14" font-weight="650" fill="#0f172a">Akun tanpa keanggotaan</text>
+<text x="88" y="352" font-size="11.5" fill="#64748b">Tidak punya akses sekolah</text>
+<rect x="70" y="430" width="270" height="85" rx="10" fill="#fff1f2" stroke="#be123c" stroke-width="1.5"/>
+<text x="88" y="462" font-size="14" font-weight="650" fill="#0f172a">Halaman /no-school</text>
+<text x="88" y="482" font-size="11.5" fill="#64748b">Info belum tergabung + keluar</text>
+<rect x="70" y="560" width="270" height="102" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="88" y="592" font-size="14" font-weight="650" fill="#0f172a">Ganti sekolah aktif</text>
+<text x="88" y="612" font-size="11.5" fill="#64748b">POST /tenancy/current</text>
+<text x="88" y="629" font-size="11.5" fill="#64748b">throttle 10/menit</text>
+<rect x="390" y="160" width="270" height="97" rx="10" fill="#ffffff" stroke="#1d4ed8" stroke-width="1.5"/>
+<rect x="404" y="150" width="50" height="20" rx="10" fill="#1d4ed8"/>
+<text x="429" y="164" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">AUTH</text>
+<text x="408" y="204" font-size="14" font-weight="650" fill="#0f172a">Login</text>
+<text x="408" y="224" font-size="11.5" fill="#64748b">Email + password · remember me</text>
+<polygon points="525.0,300 660,345.0 525.0,390 390,345.0" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+<text x="525.0" y="339" font-size="14" font-weight="650" fill="#0f172a" text-anchor="middle">Anggota sekolah?</text>
+<text x="525.0" y="359" font-size="11.5" fill="#64748b" text-anchor="middle">school_memberships</text>
+<rect x="390" y="440" width="270" height="97" rx="10" fill="#eaf6f0" stroke="#005f33" stroke-width="1.5"/>
+<rect x="404" y="430" width="50" height="20" rx="10" fill="#005f33"/>
+<text x="429" y="444" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">AREA</text>
+<text x="408" y="484" font-size="14" font-weight="650" fill="#0f172a">Dashboard sekolah</text>
+<text x="408" y="504" font-size="11.5" fill="#64748b">Semua area butuh konteks aktif</text>
+<rect x="390" y="570" width="270" height="85" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="408" y="602" font-size="14" font-weight="650" fill="#0f172a">Logout</text>
+<text x="408" y="622" font-size="11.5" fill="#64748b">Sesi dihapus → /login</text>
+<rect x="750" y="160" width="580" height="114" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<rect x="764" y="150" width="85" height="20" rx="10" fill="#005f33"/>
+<text x="806" y="164" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">LANGKAH 1</text>
+<text x="768" y="204" font-size="14" font-weight="650" fill="#0f172a">php artisan school:create-school &quot;Nama&quot;</text>
+<text x="768" y="224" font-size="11.5" fill="#64748b">Membuat tenant pada tabel schools</text>
+<text x="768" y="241" font-size="11.5" fill="#64748b">Opsi --member-email= untuk admin pertama</text>
+<rect x="750" y="300" width="580" height="114" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<rect x="764" y="290" width="85" height="20" rx="10" fill="#005f33"/>
+<text x="806" y="304" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">LANGKAH 2</text>
+<text x="768" y="344" font-size="14" font-weight="650" fill="#0f172a">php artisan school:assign-member {email} {role}</text>
+<text x="768" y="364" font-size="11.5" fill="#64748b">role: admin | staff | teacher</text>
+<text x="768" y="381" font-size="11.5" fill="#64748b">--school-id wajib bila tenant lebih dari satu</text>
+<rect x="750" y="440" width="580" height="97" rx="10" fill="#d4ede1" stroke="#005f33" stroke-width="1.5"/>
+<rect x="764" y="430" width="50" height="20" rx="10" fill="#005f33"/>
+<text x="789" y="444" font-size="10" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">DATA</text>
+<text x="768" y="484" font-size="14" font-weight="650" fill="#0f172a">Baris school_memberships</text>
+<text x="768" y="504" font-size="11.5" fill="#64748b">Unik per (school_id, user_id)</text>
+<rect x="750" y="560" width="580" height="102" rx="10" fill="#ffffff" stroke="#005f33" stroke-width="1.5"/>
+<text x="768" y="592" font-size="14" font-weight="650" fill="#0f172a">Peran berlaku per sekolah (SchoolRole)</text>
+<text x="768" y="612" font-size="11.5" fill="#64748b">admin · staff → manage + academic + report</text>
+<text x="768" y="629" font-size="11.5" fill="#64748b">teacher → academic, dibatasi penugasan</text>
+<path d="M 205.0 274.0 L 205.0 300.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 205.0 385.0 L 205.0 430.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 525.0 257.0 L 525.0 300.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 525.0 390.0 L 525.0 440.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<rect x="512" y="403.0" width="26" height="18" rx="4" fill="#ffffff"/>
+<text x="525" y="416.0" font-size="10.5" fill="#64748b" text-anchor="middle">ya</text>
+<path d="M 525.0 537.0 L 525.0 570.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 390.0 488.5 L 370.0 490.0 L 370.0 520.0 L 205.0 520.0 L 205.0 556.0 L 205.0 560.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<path d="M 390.0 345.0 L 370.0 345.0 L 370.0 480.0 L 340.0 472.5" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<rect x="348" y="400.5" width="45" height="18" rx="4" fill="#ffffff"/>
+<text x="370" y="413.5" font-size="10.5" fill="#64748b" text-anchor="middle">tidak</text>
+<path d="M 1040.0 274.0 L 1040.0 300.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1040.0 414.0 L 1040.0 440.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 1040.0 537.0 L 1040.0 560.0" fill="none" stroke="#005f33" stroke-width="1.7" marker-end="url(#ar)" stroke-linejoin="round"/>
+<path d="M 750.0 488.5 L 730.0 505.0 L 730.0 345.0 L 664.0 345.0 L 660.0 345.0" fill="none" stroke="#94a3b8" stroke-width="1.7" stroke-dasharray="6 5" marker-end="url(#arg)" stroke-linejoin="round"/>
+<rect x="674" y="420" width="51" height="18" rx="4" fill="#ffffff"/>
+<text x="700" y="433" font-size="10.5" fill="#64748b" text-anchor="middle">dibaca</text>
+<text x="48" y="762" font-size="10.5" fill="#64748b">Sumber: routes/web.php · app/Http/Controllers/Auth/AuthController.php · app/Console/Commands · app/Http/Middleware/SetTenantContext.php</text>
+</svg>

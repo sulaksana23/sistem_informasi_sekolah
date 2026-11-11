@@ -58,6 +58,7 @@ return new class extends Migration
         });
 
         Schema::table('teachers', function (Blueprint $table) {
+            $table->index('user_id');
             $table->dropUnique('teachers_user_id_unique');
             $table->dropUnique('teachers_employee_number_unique');
             $table->unique(['school_id', 'user_id']);
@@ -103,6 +104,14 @@ return new class extends Migration
             $table->string('role', 24)->default('teacher')->after('password')->index();
         });
 
+        // FK school_id dilepas lebih dulu; index school_id* di bawah dipakai
+        // sebagai penopang FK sehingga tidak bisa dihapus selagi FK ada.
+        foreach (self::TABLES as $table) {
+            Schema::table($table, function (Blueprint $table) {
+                $table->dropForeign(['school_id']);
+            });
+        }
+
         Schema::table('grades', function (Blueprint $table) {
             $table->dropIndex(['school_id', 'assessment_name']);
         });
@@ -129,9 +138,10 @@ return new class extends Migration
         });
 
         Schema::table('teachers', function (Blueprint $table) {
+            $table->unique('user_id');
+            $table->dropIndex(['user_id']);
             $table->dropUnique(['school_id', 'user_id']);
             $table->dropUnique(['school_id', 'employee_number']);
-            $table->unique('user_id');
             $table->unique('employee_number');
         });
 
@@ -142,7 +152,6 @@ return new class extends Migration
 
         foreach (self::TABLES as $table) {
             Schema::table($table, function (Blueprint $table) {
-                $table->dropForeign(['school_id']);
                 $table->dropColumn('school_id');
             });
         }
