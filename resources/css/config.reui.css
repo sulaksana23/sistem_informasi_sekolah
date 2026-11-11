@@ -1,0 +1,134 @@
+@import 'tw-animate-css';
+
+/** Colors - https://tailwindcss.com/docs/colors **/
+:root {
+  --background: #FAFAFA;
+  --foreground: var(--color-zinc-950);
+  /* Strong text (page titles, breadcrumb, user menu) — used as text-mono/bg-mono by layout chrome. */
+  --mono: var(--color-zinc-950);
+  --mono-foreground: var(--color-white);
+  --card: var(--color-white);
+  --card-foreground: var(--color-zinc-950);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-zinc-950);
+  /* Brand ramp — docs/standard/DESIGN-STANDARD.md §3.1. Default template ini hijau #005f33;
+     ganti ketujuh nilai --primary/--brand-* (terang + gelap di .dark) dengan warna brand project. */
+  --primary: #005f33;
+  --primary-foreground: var(--color-white);
+  --brand-light: #1a7a4a;
+  --brand-medium: #2d9c62;
+  --brand-strong: #003d21;
+  --brand-soft: #d4ede1;
+  --brand-softer: #eaf6f0;
+  /* Kept neutral (not brand-tinted) — StatCard and other neutral surfaces read this token too;
+     the Button "secondary" variant references --brand-soft/--brand-strong directly instead. */
+  --secondary: var(--color-zinc-100);
+  --secondary-foreground: var(--color-zinc-900);
+  --muted: #EDEDED;
+  --muted-foreground: var(--color-zinc-500);
+  --accent: var(--color-zinc-100);
+  --accent-foreground: var(--color-zinc-900);
+  /* Rose-600 for destructive — kept distinct from the brand primary so "delete/reject" actions
+     are never visually confused with the main action (DESIGN-STANDARD §3.1 step 4). */
+  --destructive: var(--color-rose-600);
+  --destructive-foreground: var(--color-white);
+  --chart-1: #FFBF84;
+  --chart-2: #00ACFF;
+  --chart-3: var(--brand-medium);
+  --chart-4: #F9E193;
+  --chart-5: #21897E;
+  --border: #E9E6E6;
+  --input: var(--color-zinc-200);
+  --ring: var(--primary);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: var(--color-zinc-950);
+  --foreground: var(--color-zinc-50);
+  --mono: var(--color-zinc-50);
+  --mono-foreground: var(--color-zinc-950);
+  --card: var(--color-zinc-950);
+  --card-foreground: var(--color-zinc-50);
+  --popover: var(--color-zinc-950);
+  --popover-foreground: var(--color-zinc-50);
+  --primary: #1a7a4a;
+  --primary-foreground: var(--color-white);
+  --brand-light: #2d9c62;
+  --brand-medium: #40b876;
+  --brand-strong: #d4ede1;
+  --brand-soft: #0d3d20;
+  --brand-softer: #081f10;
+  --secondary: var(--color-zinc-800);
+  --secondary-foreground: var(--color-zinc-50);
+  --muted: var(--color-zinc-900);
+  --muted-foreground: var(--color-zinc-500);
+  --accent: var(--color-zinc-900);
+  --accent-foreground: var(--color-zinc-50);
+  --destructive: var(--color-rose-600);
+  --destructive-foreground: var(--color-white);
+  --chart-1: #FFBF84;
+  --chart-2: #00ACFF;
+  --chart-3: var(--brand-medium);
+  --chart-4: #F9E193;
+  --chart-5: #21897E;
+  --border: var(--color-zinc-800);
+  --input: var(--color-zinc-800);
+  --ring: var(--primary);
+}
+
+/** Theme Setup **/
+@theme inline {
+  /** Base Colors **/
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-brand-light: var(--brand-light);
+  --color-brand-medium: var(--brand-medium);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-softer: var(--brand-softer);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-mono: var(--mono);
+  --color-mono-foreground: var(--mono-foreground);
+
+  /** Base Styles **/
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+/** Custom Font Size **/
+@theme {
+  --text-2sm: 0.8125rem;
+  --text-2sm--line-height: calc(1.075 / 0.8125);
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: calc(0.825 / 0.6875);
+}

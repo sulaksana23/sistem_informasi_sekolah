@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+:root {
+    --destructive-foreground: var(--color-rose-800);
+    /* Status colors — docs/standard/DESIGN-STANDARD.md §3.2 (text on a /10 tint uses *-foreground). */
+    --success: #1F8A4C;
+    --success-foreground: #045C33;
+    --info: var(--color-violet-500);
+    --info-foreground: var(--color-violet-900);
+    --warning: #F7981D;
+    --warning-foreground: #A15A0A;
+    --invert: var(--color-zinc-900);
+    --invert-foreground: var(--color-zinc-50);
+}
+
+.dark {
+    --destructive-foreground: var(--color-rose-600);
+    --success: #1F8A4C;
+    --success-foreground: #3FBE75;
+    --info: var(--color-violet-500);
+    --info-foreground: var(--color-violet-600);
+    --warning: #F7981D;
+    --warning-foreground: #F7981D;
+    --invert: var(--color-zinc-700);
+    --invert-foreground: var(--color-zinc-50);
+}
+
+@theme inline {
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-invert: var(--invert);
+    --color-invert-foreground: var(--invert-foreground);
+}

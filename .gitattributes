@@ -1,0 +1,12 @@
+# Force LF line endings for shell scripts regardless of the developer's OS /
+# git core.autocrlf setting — CRLF here breaks `#!/bin/sh` and `#!/bin/bash`
+# inside Linux containers with a cryptic "no such file or directory" error.
+*.sh text eol=lf
+docker.sh text eol=lf
+
+# Keep these as text too so `git diff`/merges work sanely cross-platform.
+*.conf text eol=lf
+*.ini text eol=lf
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+.env.docker.example text eol=lf
