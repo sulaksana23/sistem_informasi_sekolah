@@ -1,0 +1,5 @@
+# Netlify hanya menyajikan file statis hasil `vite build` (asset frontend).
+# Aplikasi Laravel (PHP) tetap harus dijalankan di server PHP/Docker.
+[build]
+  command = "npm run build"
+  publish = "public/build"
