@@ -402,14 +402,26 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
 
     public function reportData(int $yearId, ?int $classId = null): array
     {
-        $rows = StudentEnrollment::query()->with(['student', 'schoolClass'])->where('academic_year_id', $yearId)
+        // Satu kueri: hitungan absensi dan rata-rata nilai diambil sebagai
+        // subselect agregat (withCount/withAvg), bukan kueri per baris
+        // enrollment. Subselect tetap melewati relasi Eloquent sehingga global
+        // scope tenant ikut terpasang.
+        $rows = StudentEnrollment::query()
+            ->with(['student:id,student_number,name', 'schoolClass:id,name'])
+            ->withCount('attendances as attendance_count')
+            ->withCount(['attendances as present_count' => fn ($query) => $query->where('status', AttendanceStatus::PRESENT->value)])
+            ->withCount(['attendances as absent_count' => fn ($query) => $query->whereIn('status', [
+                AttendanceStatus::SICK->value, AttendanceStatus::EXCUSED->value, AttendanceStatus::ABSENT->value,
+            ])])
+            ->withAvg('grades as average_score', DB::raw('(score / max_score) * 100'))
+            ->where('academic_year_id', $yearId)
             ->where('status', 'active')->when($classId, fn ($q) => $q->where('school_class_id', $classId))
             ->orderBy('school_class_id')->orderBy('id')->get()->map(fn (StudentEnrollment $row) => [
                 'student_number' => $row->student->student_number, 'student_name' => $row->student->name,
-                'class_name' => $row->schoolClass->name, 'attendance_count' => $row->attendances()->count(),
-                'present_count' => $row->attendances()->where('status', 'present')->count(),
-                'absent_count' => $row->attendances()->whereIn('status', ['sick', 'excused', 'absent'])->count(),
-                'average_score' => $row->grades()->selectRaw('AVG((score / max_score) * 100) as average_score')->value('average_score'),
+                'class_name' => $row->schoolClass->name, 'attendance_count' => (int) $row->attendance_count,
+                'present_count' => (int) $row->present_count,
+                'absent_count' => (int) $row->absent_count,
+                'average_score' => $row->average_score === null ? null : (float) $row->average_score,
             ])->all();
         $averages = array_values(array_filter(array_column($rows, 'average_score'), fn ($value) => $value !== null));
 
