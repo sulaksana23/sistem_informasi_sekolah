@@ -41,9 +41,14 @@ class SchoolController extends Controller
         return to_route('school.profile.index')->with('success', 'Profil sekolah berhasil diperbarui.');
     }
 
-    public function catalog(string $section)
+    public function catalog(Request $request, string $section)
     {
-        return Inertia::render('school/pages/SchoolCatalog', SchoolService::catalog($section));
+        $filters = $request->validate([
+            'search' => ['nullable', 'string', 'max:100'],
+            'page' => ['nullable', 'integer', 'min:1'],
+        ]);
+
+        return Inertia::render('school/pages/SchoolCatalog', SchoolService::catalog($section, $filters['search'] ?? null));
     }
 
     public function storeCatalog(CatalogRequest $request, string $section)

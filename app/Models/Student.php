@@ -3,19 +3,20 @@
 namespace App\Models;
 
 use App\Enums\StudentGender;
-use App\Models\Concerns\BelongsToTenant;
 use App\Enums\StudentStatus;
+use App\Models\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['student_number', 'nisn', 'name', 'gender', 'birth_date', 'phone', 'address', 'status'])]
 class Student extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
+    use SoftDeletes;
 
     protected function casts(): array
     {

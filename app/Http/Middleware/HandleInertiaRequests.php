@@ -73,7 +73,7 @@ class HandleInertiaRequests extends Middleware
         // (SchoolRole). Mengikuti mapping Gate di AppServiceProvider. Bila
         // ada provisi peran eksternal (SSO), daftarnya tetap diteruskan.
         $tenantPermissions = match (TenantContext::active()->role()) {
-            SchoolRole::ADMIN => ['school.manage', 'school.academic', 'school.report'],
+            SchoolRole::ADMIN => ['school.manage', 'school.academic', 'school.report', 'school.members'],
             SchoolRole::STAFF => ['school.manage', 'school.academic', 'school.report'],
             SchoolRole::TEACHER => ['school.academic'],
             default => [],

@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuditLog\AuditLogController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\School\SchoolController;
 use App\Http\Controllers\Tenancy\TenantController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +18,15 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])
         ->middleware('throttle:5,1')
         ->name('register.store');
+
+    Route::get('/forgot-password', [PasswordResetController::class, 'showForgot'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendLink'])
+        ->middleware('throttle:5,1')
+        ->name('password.email');
+    Route::get('/reset-password/{token}', [PasswordResetController::class, 'showReset'])->name('password.reset');
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->middleware('throttle:5,1')
+        ->name('password.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -59,6 +71,16 @@ Route::middleware('auth')->group(function () {
             Route::post('/attendance', [SchoolController::class, 'storeAttendance'])->name('attendance.store');
             Route::get('/grades', [SchoolController::class, 'grades'])->name('grades.index');
             Route::post('/grades', [SchoolController::class, 'storeGrades'])->name('grades.store');
+        });
+
+        Route::middleware('can:school.manage')->get('/school/audit-logs', [AuditLogController::class, 'index'])->name('school.audit-logs.index');
+
+        // Kelola anggota sekolah aktif — hanya admin.
+        Route::middleware('can:school.members')->prefix('school/members')->name('school.members.')->group(function () {
+            Route::get('/', [MemberController::class, 'index'])->name('index');
+            Route::post('/', [MemberController::class, 'store'])->middleware('throttle:20,1')->name('store');
+            Route::put('/{id}', [MemberController::class, 'update'])->whereNumber('id')->name('update');
+            Route::delete('/{id}', [MemberController::class, 'destroy'])->whereNumber('id')->name('destroy');
         });
 
         Route::middleware('can:school.report')->get('/school/reports', [SchoolController::class, 'reports'])->name('school.reports.index');

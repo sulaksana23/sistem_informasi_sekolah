@@ -25,6 +25,7 @@ class CreateSchoolCommand extends Command
             $user = User::query()->where('email', mb_strtolower(trim((string) $email)))->first();
             if (! $user) {
                 $this->error("Akun dengan email {$email} tidak ditemukan; sekolah sudah dibuat tanpa anggota.");
+
                 return 1;
             }
             TenantService::assignMember($user->id, $school->id, SchoolRole::ADMIN);

@@ -22,7 +22,7 @@ Aplikasi memusatkan administrasi sekolah dan pencatatan akademik. Satu instalasi
 - Nilai per asesmen dengan nilai maksimum yang dapat diatur.
 - Dashboard dan laporan akademik dengan filter tahun ajaran/kelas, cetak, dan CSV.
 
-Jadwal pelajaran, semester terpisah, portal siswa/wali, notifikasi, pembayaran, perpustakaan, LMS, API eksternal, SSO, dan reset kata sandi email belum termasuk. UI khusus untuk mengelola keanggotaan (lihat §8 keterbatasan) belum ada; pengelolaan anggota dilakukan lewat perintah shell.
+Jadwal pelajaran, semester terpisah, portal siswa/wali, notifikasi, pembayaran, perpustakaan, LMS, API eksternal, dan SSO belum termasuk. Reset kata sandi via email, UI kelola anggota (khusus admin), soft delete siswa/guru, dan audit log perubahan nilai/absensi sudah tersedia.
 
 ## 3. Peran dan aturan akses (asumsi awal)
 
@@ -111,7 +111,7 @@ Migrasi `2026_11_06_100002_tenantize_school_tables` membuat tenant awal (nama da
 
 ### 8.4 Keterbatasan yang belum ditangani
 
-- Tidak ada UI/e2e endpoint untuk membuat/mengubah tenant dan mengelola keanggotaan — lewat perintah shell saja.
+- Admin sekolah dapat menambah anggota (akun yang sudah terdaftar), mengubah peran, dan mencabut keanggotaan dari halaman Anggota Sekolah; nama sekolah diubah dari Profil Sekolah. Membuat tenant baru masih lewat perintah shell.
 - Simpanan konteks tidak diperbarui real-time saat keanggotaan dicabut; efeknya muncul pada request berikutnya.
 - Absensi/nilai/penempatan mengacu referensi lintas entitas dalam satu sekolah; belum ada pekerjaan lintas-sekolah (konsolidasi laporan grup) — di luar cakupan MVP.
-- Pengujian fitur baru sebagian: `tests/Feature/School/TenantIsolationTest.php` dan `SchoolProfileTest.php`; modul lain belum punya test.
+- Test fitur mencakup auth & reset kata sandi, master data, penempatan/penugasan, absensi, nilai, laporan, anggota, audit log, dan isolasi tenant; dijalankan di CI.

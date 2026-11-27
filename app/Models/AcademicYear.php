@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToTenant;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-use App\Models\Concerns\BelongsToTenant;
-
 #[Fillable(['name', 'starts_at', 'ends_at', 'is_active'])]
 class AcademicYear extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
 
     protected function casts(): array
     {

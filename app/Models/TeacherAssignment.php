@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['teacher_id', 'school_class_id', 'subject_id', 'academic_year_id'])]
 class TeacherAssignment extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
 
     public function teacher(): BelongsTo
     {

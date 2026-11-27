@@ -8,7 +8,10 @@ use Illuminate\Validation\Rule;
 
 class CatalogRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
     public function rules(): array
     {
@@ -26,7 +29,7 @@ class CatalogRequest extends FormRequest
                 'status' => ['required', Rule::in(['active', 'graduated', 'transferred', 'inactive'])],
             ],
             'teachers' => [
-                'user_id' => ['nullable', 'integer', 'exists:users,id', Rule::unique('teachers', 'user_id')->ignore($id)->where('school_id', $schoolId)],
+                'user_id' => ['nullable', 'integer', Rule::exists('school_memberships', 'user_id')->where('school_id', $schoolId)->where('role', 'teacher'), Rule::unique('teachers', 'user_id')->ignore($id)->where('school_id', $schoolId)],
                 'employee_number' => ['required', 'string', 'max:40', Rule::unique('teachers', 'employee_number')->ignore($id)->where('school_id', $schoolId)],
                 'name' => ['required', 'string', 'max:255'], 'email' => ['nullable', 'email', 'max:255'],
                 'phone' => ['nullable', 'string', 'max:30'], 'address' => ['nullable', 'string', 'max:2000'],

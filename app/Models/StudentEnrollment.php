@@ -13,9 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['student_id', 'school_class_id', 'academic_year_id', 'enrolled_at', 'status'])]
 class StudentEnrollment extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
 
     protected function casts(): array
     {

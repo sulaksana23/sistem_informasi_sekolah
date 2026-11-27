@@ -12,9 +12,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['name', 'grade_level', 'section', 'homeroom_teacher_id'])]
 class SchoolClass extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
 
     protected $table = 'school_classes';
 

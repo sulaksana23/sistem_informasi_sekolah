@@ -22,12 +22,14 @@ class AssignMemberCommand extends Command
         $user = User::query()->where('email', mb_strtolower(trim($this->argument('email'))))->first();
         if (! $user) {
             $this->error('Akun dengan email tersebut tidak ditemukan.');
+
             return 1;
         }
 
         $role = SchoolRole::tryFrom((string) $this->argument('role'));
         if (! $role) {
             $this->error('Peran harus berupa admin, staff, atau teacher.');
+
             return self::FAILURE;
         }
 
@@ -49,6 +51,7 @@ class AssignMemberCommand extends Command
             $school = School::query()->find((int) $schoolId);
             if (! $school) {
                 $this->error("Sekolah dengan ID {$schoolId} tidak ditemukan.");
+
                 return null;
             }
 
@@ -58,6 +61,7 @@ class AssignMemberCommand extends Command
         $schools = School::query()->orderBy('id')->get();
         if ($schools->isEmpty()) {
             $this->error('Belum ada sekolah. Buat dulu: php artisan school:create-school {nama}');
+
             return null;
         }
         if ($schools->count() > 1) {

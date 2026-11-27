@@ -11,9 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['student_enrollment_id', 'subject_id', 'assessment_name', 'assessment_date', 'score', 'max_score', 'note', 'recorded_by'])]
 class Grade extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
 
     protected function casts(): array
     {

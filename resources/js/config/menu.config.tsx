@@ -1,4 +1,4 @@
-import { LayoutGrid, Component, Package, Settings, UsersRound, BookOpenCheck, CalendarCheck2, ClipboardList, UserRoundCog, Database, UserPlus, Building2 } from "lucide-react";
+import { LayoutGrid, Component, Package, Settings, UsersRound, BookOpenCheck, CalendarCheck2, ClipboardList, UserRoundCog, Database, UserPlus, Building2, ShieldCheck, History } from "lucide-react";
 import { type MenuConfig } from "./types";
 import { route } from "ziggy-js";
 
@@ -42,6 +42,7 @@ export const MENU_SIDEBAR: MenuConfig = [
     { title: "Dashboard", icon: LayoutGrid, path: route("dashboard", undefined, false) },
     { heading: "Sekolah" },
     { title: "Profil Sekolah", icon: Building2, path: route("school.profile.index", undefined, false) },
+    { title: "Anggota Sekolah", icon: ShieldCheck, path: route("school.members.index", undefined, false), permission: "school.members" },
     { heading: "Master Data" },
     { title: "Ringkasan Master Data", icon: Database, path: route("school.master-data.index", undefined, false), permission: "school.manage" },
     { title: "Siswa", icon: UsersRound, path: route("school.students.index", undefined, false), permission: "school.manage" },
@@ -55,4 +56,5 @@ export const MENU_SIDEBAR: MenuConfig = [
     { title: "Absensi", icon: CalendarCheck2, path: route("school.attendance.index", undefined, false), permission: "school.academic" },
     { title: "Input Nilai", icon: ClipboardList, path: route("school.grades.index", undefined, false), permission: "school.academic" },
     { title: "Laporan", icon: BookOpenCheck, path: route("school.reports.index", undefined, false), permission: "school.report" },
+    { title: "Riwayat Perubahan", icon: History, path: route("school.audit-logs.index", undefined, false), permission: "school.manage" },
 ];

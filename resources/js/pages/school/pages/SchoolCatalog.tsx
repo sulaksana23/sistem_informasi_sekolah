@@ -1,13 +1,16 @@
-import { useForm } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import { route } from "ziggy-js";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { useMemo, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
     ConfirmDialog,
     FieldSpec,
+    PaginationMeta,
     Panel,
+    ServerPagination,
     SchoolField,
     SchoolPage,
     TableColumn,
@@ -16,6 +19,7 @@ type FormValue = string | number | boolean | null;
 type CatalogRow = Record<string, FormValue> & { id: number };
 type Props = {
     section: string; title: string; description: string; fields: FieldSpec[]; columns: TableColumn[]; records: CatalogRow[];
+    search: string; pagination: PaginationMeta;
 };
 function blank(fields: FieldSpec[], source?: CatalogRow): Record<string, FormValue> {
     return Object.fromEntries(fields.map((field) => [field.name, source?.[field.name] ?? (field.type === "checkbox" ? false : "")]));
@@ -23,6 +27,18 @@ function blank(fields: FieldSpec[], source?: CatalogRow): Record<string, FormVal
 export default function SchoolCatalog(props: Props) {
     const [editing, setEditing] = useState<CatalogRow | null>(null);
     const [deleting, setDeleting] = useState<CatalogRow | null>(null);
+    const [search, setSearch] = useState(props.search);
+    const [navigating, setNavigating] = useState(false);
+    const visit = (params: { search?: string; page?: number }) => {
+        const query = { search: params.search || undefined, page: params.page && params.page > 1 ? params.page : undefined };
+        router.get(window.location.pathname, query, {
+            preserveState: true, preserveScroll: true, replace: true,
+            only: ["records", "pagination", "search"],
+            onStart: () => setNavigating(true), onFinish: () => setNavigating(false),
+        });
+    };
+    const submitSearch = (event: FormEvent) => { event.preventDefault(); visit({ search }); };
+    const softDeleted = props.section === "students" || props.section === "teachers";
     const initial = useMemo(() => blank(props.fields), [props.fields]);
     const form = useForm<Record<string, FormValue>>(initial);
     const reset = () => { setEditing(null); form.setData(blank(props.fields)); form.clearErrors(); };
@@ -59,7 +75,17 @@ export default function SchoolCatalog(props: Props) {
                 </div>
             </form>
         </Panel>
-        <Panel title="Daftar data" description={`${props.records.length} baris tersimpan.`}>
+        <Panel title="Daftar data" description={`${props.pagination.total} data tersimpan.`}
+            actions={
+                <form role="search" onSubmit={submitSearch} className="flex gap-2">
+                    <Input aria-label="Cari data" placeholder="Cari…" value={search} maxLength={100}
+                        onChange={(event) => setSearch(event.currentTarget.value)} className="w-48" />
+                    <Button type="submit" variant="outline" size="sm" disabled={navigating}>
+                        <Search aria-hidden="true" />
+                        Cari
+                    </Button>
+                </form>
+            }>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -71,7 +97,7 @@ export default function SchoolCatalog(props: Props) {
                     {props.records.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={props.columns.length + 1} className="py-10 text-center text-muted-foreground">
-                                Belum ada data.
+                                {props.search ? "Tidak ada data yang cocok dengan pencarian." : "Belum ada data."}
                             </TableCell>
                         </TableRow>
                     ) : props.records.map((row) => (
@@ -93,12 +119,16 @@ export default function SchoolCatalog(props: Props) {
                     ))}
                 </TableBody>
             </Table>
+            <ServerPagination meta={props.pagination} busy={navigating}
+                onPageChange={(page) => visit({ search: props.search, page })} />
         </Panel>
         <ConfirmDialog
             open={deleting !== null}
             onOpenChange={(open) => !open && setDeleting(null)}
             title="Hapus data ini?"
-            description={deleting ? `Data "${rowLabel(deleting)}" akan dihapus permanen.` : undefined}
+            description={deleting ? softDeleted
+                ? `Data "${rowLabel(deleting)}" akan dihapus dari daftar. Arsip tetap tersimpan untuk keperluan retensi.`
+                : `Data "${rowLabel(deleting)}" akan dihapus permanen.` : undefined}
             busy={form.processing}
             onConfirm={confirmDelete}
         />

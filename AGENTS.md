@@ -52,11 +52,11 @@ Aturan kerja:
 | Item | Nilai |
 |---|---|
 | Versi | PHP 8.4, Node 22, Laravel (lihat `composer.json`), Inertia v2, React + TS strict, TanStack Query v5 / Table v8 |
-| Domain (folder `api/` & menu) | `auth`; `tenancy` (sekolah aktif + pemafil sekolah); `school` (master data, penempatan, absensi, nilai, laporan) |
+| Domain (folder `api/` & menu) | `auth` (login, daftar, reset kata sandi); `tenancy` (sekolah aktif + pemilih sekolah); `school` (master data, penempatan, absensi, nilai, laporan); `member` (kelola anggota sekolah); `audit-log` (riwayat perubahan nilai/absensi) |
 | Repository pattern | `itmm/easy-repository` (`make:repository X --service`) |
-| Sumber permission | Peran keanggotaan per sekolah (`SchoolRole` di `school_memberships`) + Gate `school.manage`, `school.academic`, `school.report` milik sekolah aktif (TenantContext); hak akses juga dibagikan ke menu Inertia |
+| Sumber permission | Peran keanggotaan per sekolah (`SchoolRole` di `school_memberships`) + Gate `school.manage`, `school.academic`, `school.report`, `school.members` (khusus admin) milik sekolah aktif (TenantContext); hak akses juga dibagikan ke menu Inertia |
 | Multi-tenant | Tenant = `schools`; konteks sekolah aktif dari sesi dibentuk middleware `tenant.context` **hanya dari keanggotaan sah**; fail-closed (tanpa konteks = tanpa data + Gate gagal). Semua model data sekolah memakai trait `BelongsToTenant`. |
-| Auth web / API | Web memakai session guard, email + password, remember me, dan logout. Pendaftaran mandiri **tidak memberi akses ke sekolah mana pun** (halaman `/no-school`) dan tidak menerima pilihan/peran role; keanggotaan & peran diset operator lewat `school:create-school` / `school:assign-member` dari shell tepercaya. API auth belum dibuat. |
+| Auth web / API | Web memakai session guard, email + password, remember me, dan logout. Pendaftaran mandiri **tidak memberi akses ke sekolah mana pun** (halaman `/no-school`) dan tidak menerima pilihan/peran role; sekolah pertama + admin pertama dibuat operator lewat `school:create-school` / `school:assign-member`; setelah itu admin sekolah mengelola anggota & peran dari halaman **Anggota Sekolah** (`/school/members`). Reset kata sandi via email (`/forgot-password`, broker bawaan Laravel). API auth belum dibuat. |
 | Database | mariadb-container |
 | Query key | URL route, factory `{module}Keys` di `resources/js/api/` (FRONTEND §7) |
 | Desain | DESIGN-STANDARD; brand default template `#005f33` (ganti lewat DESIGN §3.1); font sistem; ikon `lucide-react` |
@@ -70,21 +70,19 @@ Aturan kerja:
 ### Known deviations (kode lama — jangan ditiru)
 - `routes/example.php` adalah halaman demo/reference dan hanya dilindungi `auth`. Jangan menyalin pola itu untuk modul bisnis atau data sekolah.
 - Domain `school` masih terpusat di satu controller (`SchoolController`), satu service, dan satu repository untuk semua submodul (master, penempatan, absensi, nilai, laporan). Modul baru dipecah per submodul (controller/service/repository sendiri), jangan menambah method ke kelas gabungan ini.
-- Master data (`catalog`) memakai route generik `{section}` dan belum dipaginasi di SQL. Daftar baru wajib paginate/sort/search di server.
+- Master data (`catalog`) memakai route generik `{section}`. Daftar sudah dipaginasi + dicari di SQL (`?search=&page=`); modul baru tetap pakai controller/route sendiri, bukan `{section}`.
 - Frontend `school` belum punya folder `resources/js/api/school/` dengan factory `schoolKeys`; data datang dari props Inertia. Fitur baru yang memakai TanStack Query membuat factory itu dulu.
 
 ### Status & kekurangan (per 2026-11-27)
-Sudah ada: tenant + keanggotaan per sekolah, profil sekolah, master CRUD, penempatan, penugasan guru, absensi, nilai, laporan (cetak/CSV), test isolasi tenant & profil sekolah.
+Sudah ada: tenant + keanggotaan per sekolah, UI kelola anggota (tambah/ubah peran/cabut; admin tidak bisa mengubah dirinya sendiri), profil & ganti nama sekolah, master CRUD dengan paginasi/pencarian server, soft delete siswa/guru, penempatan, penugasan guru, absensi, nilai, laporan (cetak/CSV aman formula-injection), audit log nilai/absensi (`audit_logs`, halaman Riwayat Perubahan), reset kata sandi via email, test fitur untuk semua modul (`tests/Feature/**`), CI GitHub Actions (Pint + PHPUnit + tsc + build).
 
 Belum ada (urut prioritas):
-1. **Test fitur** untuk master CRUD, penempatan, penugasan, absensi, nilai, laporan, auth, dan Gate per peran (baru 8 test di `tests/Feature/School/`).
-2. **UI kelola anggota & tenant** (undang/ubah peran/cabut anggota, rename sekolah) — masih lewat artisan.
-3. **Reset kata sandi** dan verifikasi email.
-4. **Audit log** perubahan nilai/absensi + kebijakan koreksi nilai; soft delete untuk data siswa/guru.
-5. **Paginasi/pencarian server** untuk daftar siswa/guru dan laporan.
-6. **Semester/kalender akademik & jadwal pelajaran**; portal siswa/wali; import/export Excel data siswa.
-7. **Lokalisasi** konsisten via react-intl (sekarang teks Indonesia langsung).
-8. **Operasional produksi**: backup terjadwal, CI (test + pint + tsc), API auth (belum dibuat).
+1. **Undangan anggota via email** untuk akun yang belum terdaftar (sekarang akun harus mendaftar dulu), verifikasi email, dan UI pemulihan (restore) siswa/guru yang di-soft delete.
+2. **Kebijakan koreksi nilai** (kunci nilai setelah periode, persetujuan koreksi) — butuh keputusan sekolah; audit log sudah tersedia sebagai dasar.
+3. **Semester/kalender akademik & jadwal pelajaran**; portal siswa/wali; import/export Excel data siswa.
+4. **Lokalisasi** konsisten via react-intl (sekarang teks Indonesia langsung).
+5. **Operasional produksi**: backup terjadwal, konfigurasi mailer produksi (default `MAIL_MAILER=log`), API auth.
+6. **Refactor domain `school`** dari kelas gabungan menjadi per-submodul (lihat Known deviations).
 
 ## Paseo request workflow
 

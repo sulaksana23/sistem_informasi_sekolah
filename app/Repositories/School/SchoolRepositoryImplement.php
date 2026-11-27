@@ -6,6 +6,7 @@ use App\Enums\AttendanceStatus;
 use App\Enums\SchoolRole;
 use App\Models\AcademicYear;
 use App\Models\Attendance;
+use App\Models\AuditLog;
 use App\Models\Grade;
 use App\Models\School;
 use App\Models\SchoolClass;
@@ -16,6 +17,9 @@ use App\Models\Teacher;
 use App\Models\TeacherAssignment;
 use App\Models\User;
 use App\Services\Tenancy\TenantContext;
+use Closure;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Itmm\EasyRepository\Implementations\Eloquent;
 
@@ -39,35 +43,68 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
 
     public function catalogRecords(string $section): array
     {
-        $records = match ($section) {
-            'students' => Student::query()->orderBy('student_number')->get()->map(fn (Student $row) => [
+        if (! isset(self::CATALOGS[$section])) {
+            return [];
+        }
+
+        return $this->catalogQuery($section, null)->get()->map($this->catalogMapper($section))->values()->all();
+    }
+
+    public function catalogPage(string $section, ?string $search, int $perPage): LengthAwarePaginator
+    {
+        abort_unless(isset(self::CATALOGS[$section]), 404);
+        $page = $this->catalogQuery($section, $search)->paginate($perPage)->withQueryString();
+        $page->setCollection($page->getCollection()->map($this->catalogMapper($section)));
+
+        return $page;
+    }
+
+    private function catalogQuery(string $section, ?string $search): Builder
+    {
+        $term = $search === null || trim($search) === '' ? null : '%'.addcslashes(trim($search), '%_\\').'%';
+        $like = fn (array $columns) => fn (Builder $query) => $query->where(function (Builder $inner) use ($columns, $term) {
+            foreach ($columns as $column) {
+                $inner->orWhere($column, 'like', $term);
+            }
+        });
+
+        return match ($section) {
+            'students' => Student::query()->when($term, $like(['student_number', 'nisn', 'name']))->orderBy('student_number'),
+            'teachers' => Teacher::query()->with('user')->when($term, $like(['employee_number', 'name', 'email']))->orderBy('employee_number'),
+            'classes' => SchoolClass::query()->with('homeroomTeacher')->when($term, $like(['name', 'section']))->orderBy('grade_level')->orderBy('section'),
+            'subjects' => Subject::query()->when($term, $like(['code', 'name']))->orderBy('name'),
+            'academic-years' => AcademicYear::query()->when($term, $like(['name']))->orderByDesc('starts_at'),
+        };
+    }
+
+    private function catalogMapper(string $section): Closure
+    {
+        return match ($section) {
+            'students' => fn (Student $row) => [
                 'id' => $row->id, 'student_number' => $row->student_number, 'nisn' => $row->nisn,
                 'name' => $row->name, 'gender' => $row->gender->value, 'gender_label' => $row->gender->label(),
                 'birth_date' => $row->birth_date?->format('Y-m-d'), 'phone' => $row->phone, 'address' => $row->address,
                 'status' => $row->status->value, 'status_label' => $row->status->label(),
-            ]),
-            'teachers' => Teacher::query()->with('user')->orderBy('employee_number')->get()->map(fn (Teacher $row) => [
+            ],
+            'teachers' => fn (Teacher $row) => [
                 'id' => $row->id, 'user_id' => $row->user_id, 'user_name' => $row->user?->name,
                 'employee_number' => $row->employee_number, 'name' => $row->name, 'email' => $row->email,
                 'phone' => $row->phone, 'address' => $row->address, 'status' => $row->status->value,
                 'status_label' => $row->status->label(),
-            ]),
-            'classes' => SchoolClass::query()->with('homeroomTeacher')->orderBy('grade_level')->orderBy('section')->get()->map(fn (SchoolClass $row) => [
+            ],
+            'classes' => fn (SchoolClass $row) => [
                 'id' => $row->id, 'name' => $row->name, 'grade_level' => $row->grade_level, 'section' => $row->section,
                 'homeroom_teacher_id' => $row->homeroom_teacher_id, 'homeroom_teacher_name' => $row->homeroomTeacher?->name,
-            ]),
-            'subjects' => Subject::query()->orderBy('name')->get()->map(fn (Subject $row) => [
+            ],
+            'subjects' => fn (Subject $row) => [
                 'id' => $row->id, 'code' => $row->code, 'name' => $row->name, 'description' => $row->description,
-            ]),
-            'academic-years' => AcademicYear::query()->orderByDesc('starts_at')->get()->map(fn (AcademicYear $row) => [
+            ],
+            'academic-years' => fn (AcademicYear $row) => [
                 'id' => $row->id, 'name' => $row->name, 'starts_at' => $row->starts_at->format('Y-m-d'),
                 'ends_at' => $row->ends_at->format('Y-m-d'), 'is_active' => $row->is_active,
                 'status_label' => $row->is_active ? 'Aktif' : 'Arsip',
-            ]),
-            default => collect(),
+            ],
         };
-
-        return $records->values()->all();
     }
 
     public function catalogOptions(): array
@@ -343,10 +380,18 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
     {
         DB::transaction(function () use ($date, $students, $userId) {
             foreach ($students as $row) {
-                Attendance::query()->updateOrCreate(
-                    ['student_enrollment_id' => $row['enrollment_id'], 'attendance_date' => $date],
-                    ['status' => $row['status'], 'note' => $row['note'] ?? null, 'recorded_by' => $userId],
-                );
+                // whereDate: kolom date bisa tersimpan sebagai datetime di driver tertentu (SQLite).
+                $record = Attendance::query()->where('student_enrollment_id', $row['enrollment_id'])
+                    ->whereDate('attendance_date', $date)->first()
+                    ?? new Attendance(['student_enrollment_id' => $row['enrollment_id'], 'attendance_date' => $date]);
+                $old = $record->exists ? ['status' => $record->status->value, 'note' => $record->note] : null;
+                $record->fill(['status' => $row['status'], 'note' => ($row['note'] ?? '') === '' ? null : $row['note'], 'recorded_by' => $userId]);
+                $new = ['status' => $row['status'], 'note' => $record->note];
+                if ($old === $new) {
+                    continue;
+                }
+                $record->save();
+                $this->audit($userId, $old === null ? 'created' : 'updated', 'attendance', $record->id, $old, $new);
             }
         });
     }
@@ -374,11 +419,18 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
                 if ($score === null || $score === '') {
                     continue;
                 }
-                Grade::query()->updateOrCreate(
+                $record = Grade::query()->firstOrNew(
                     ['student_enrollment_id' => $row['enrollment_id'], 'subject_id' => $data['subject_id'], 'assessment_name' => $data['assessment_name']],
-                    ['assessment_date' => $data['assessment_date'] ?? null, 'score' => $score, 'max_score' => $data['max_score'],
-                        'note' => $row['note'] ?? null, 'recorded_by' => $userId],
                 );
+                $old = $record->exists ? $this->gradeSnapshot($record) : null;
+                $record->fill(['assessment_date' => $data['assessment_date'] ?? null, 'score' => $score, 'max_score' => $data['max_score'],
+                    'note' => ($row['note'] ?? '') === '' ? null : $row['note'], 'recorded_by' => $userId]);
+                $new = $this->gradeSnapshot($record);
+                if ($old === $new) {
+                    continue;
+                }
+                $record->save();
+                $this->audit($userId, $old === null ? 'created' : 'updated', 'grade', $record->id, $old, $new);
             }
         });
     }
@@ -413,7 +465,7 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
             ->withCount(['attendances as absent_count' => fn ($query) => $query->whereIn('status', [
                 AttendanceStatus::SICK->value, AttendanceStatus::EXCUSED->value, AttendanceStatus::ABSENT->value,
             ])])
-            ->withAvg('grades as average_score', DB::raw('(score / max_score) * 100'))
+            ->withAvg('grades as average_score', DB::raw('(score * 100.0) / max_score'))
             ->where('academic_year_id', $yearId)
             ->where('status', 'active')->when($classId, fn ($q) => $q->where('school_class_id', $classId))
             ->orderBy('school_class_id')->orderBy('id')->get()->map(fn (StudentEnrollment $row) => [
@@ -432,5 +484,23 @@ class SchoolRepositoryImplement extends Eloquent implements SchoolRepository
             'average_score' => count($averages) ? round(array_sum(array_map('floatval', $averages)) / count($averages), 2) : null,
             'rows' => $rows,
         ];
+    }
+
+    private function gradeSnapshot(Grade $grade): array
+    {
+        return [
+            'assessment_date' => $grade->assessment_date?->format('Y-m-d'),
+            'score' => $grade->score === null ? null : round((float) $grade->score, 2),
+            'max_score' => $grade->max_score === null ? null : round((float) $grade->max_score, 2),
+            'note' => $grade->note,
+        ];
+    }
+
+    private function audit(int $userId, string $event, string $type, int $id, ?array $old, array $new): void
+    {
+        AuditLog::query()->create([
+            'user_id' => $userId, 'event' => $event, 'auditable_type' => $type,
+            'auditable_id' => $id, 'old_values' => $old, 'new_values' => $new,
+        ]);
     }
 }

@@ -1,4 +1,4 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { ArrowRight } from "lucide-react";
 import type { FormEvent, ReactNode } from "react";
 import { route } from "ziggy-js";
@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/layouts/auth/AuthLayout";
+import type { PageProps } from "@/types/common/page-props";
 
 function AuthLogin() {
+    const { flash } = usePage<PageProps>().props;
     const form = useForm({ email: "", password: "", remember: false });
 
     const submit = (event: FormEvent<HTMLFormElement>) => {
@@ -26,6 +28,12 @@ function AuthLogin() {
                         Gunakan email dan kata sandi yang terdaftar.
                     </p>
                 </div>
+
+                {flash?.success && (
+                    <p role="status" className="mb-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
+                        {flash.success}
+                    </p>
+                )}
 
                 <form onSubmit={submit} className="space-y-5">
                     <div className="space-y-2">
@@ -68,6 +76,7 @@ function AuthLogin() {
                         )}
                     </div>
 
+                    <div className="flex flex-wrap items-center justify-between gap-2">
                     <label htmlFor="remember" className="flex w-fit cursor-pointer items-center gap-2 text-sm text-muted-foreground">
                         <input
                             id="remember"
@@ -78,6 +87,10 @@ function AuthLogin() {
                         />
                         Ingat saya di perangkat ini
                     </label>
+                    <Link href={route("password.request")} className="text-sm font-medium text-primary underline-offset-4 hover:underline">
+                        Lupa kata sandi?
+                    </Link>
+                    </div>
 
                     <Button type="submit" size="lg" className="w-full" disabled={form.processing}>
                         {form.processing ? "Sedang masuk..." : "Masuk"}

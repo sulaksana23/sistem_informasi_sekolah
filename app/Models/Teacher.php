@@ -9,13 +9,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['user_id', 'employee_number', 'name', 'email', 'phone', 'address', 'status'])]
 class Teacher extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
+    use SoftDeletes;
 
     protected function casts(): array
     {

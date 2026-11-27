@@ -3,6 +3,7 @@
 namespace App\Repositories\School;
 
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Itmm\EasyRepository\Repository;
 
 interface SchoolRepository extends Repository
@@ -14,6 +15,8 @@ interface SchoolRepository extends Repository
     public function updateSchoolProfile(array $data): void;
 
     public function catalogRecords(string $section): array;
+
+    public function catalogPage(string $section, ?string $search, int $perPage): LengthAwarePaginator;
 
     public function catalogOptions(): array;
 

@@ -8,7 +8,10 @@ use Illuminate\Validation\Rule;
 
 class StoreTeacherAssignmentRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool
+    {
+        return true;
+    }
 
     public function rules(): array
     {

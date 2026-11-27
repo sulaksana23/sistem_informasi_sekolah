@@ -1,10 +1,11 @@
 import { Head, usePage } from "@inertiajs/react";
 import type { ReactNode } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { Container } from "@/components/common/container";
 import Header from "@/components/common/header";
 import TenantSwitcher from "@/components/common/tenant-switcher";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -209,5 +210,32 @@ export function ConfirmDialog({ open, onOpenChange, title, description, confirmL
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
+    );
+}
+export type PaginationMeta = { current_page: number; last_page: number; total: number; per_page: number };
+
+/** Navigasi halaman untuk daftar yang dipaginasi di server (query `page`). */
+export function ServerPagination({ meta, onPageChange, busy }: {
+    meta: PaginationMeta; onPageChange: (page: number) => void; busy?: boolean;
+}) {
+    if (meta.last_page <= 1) return null;
+    return (
+        <nav aria-label="Navigasi halaman" className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm">
+            <p className="text-muted-foreground">
+                Halaman {meta.current_page} dari {meta.last_page} · {meta.total} data
+            </p>
+            <div className="flex gap-2">
+                <Button type="button" variant="outline" size="sm" disabled={busy || meta.current_page <= 1}
+                    onClick={() => onPageChange(meta.current_page - 1)}>
+                    <ChevronLeft aria-hidden="true" />
+                    Sebelumnya
+                </Button>
+                <Button type="button" variant="outline" size="sm" disabled={busy || meta.current_page >= meta.last_page}
+                    onClick={() => onPageChange(meta.current_page + 1)}>
+                    Berikutnya
+                    <ChevronRight aria-hidden="true" />
+                </Button>
+            </div>
+        </nav>
     );
 }

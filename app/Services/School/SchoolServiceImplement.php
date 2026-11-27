@@ -9,6 +9,8 @@ use Itmm\EasyRepository\Service;
 
 class SchoolServiceImplement extends Service
 {
+    private const PER_PAGE = 20;
+
     private const CATALOGS = [
         'students' => ['title' => 'Data Siswa', 'description' => 'Kelola identitas dan status siswa.', 'columns' => [
             ['key' => 'student_number', 'label' => 'NIS'], ['key' => 'nisn', 'label' => 'NISN'], ['key' => 'name', 'label' => 'Nama'],
@@ -59,7 +61,7 @@ class SchoolServiceImplement extends Service
         $this->mainRepository->updateSchoolProfile($data);
     }
 
-    public function catalog(string $section): array
+    public function catalog(string $section, ?string $search = null): array
     {
         abort_unless(isset(self::CATALOGS[$section]), 404);
         $config = self::CATALOGS[$section];
@@ -93,8 +95,13 @@ class SchoolServiceImplement extends Service
             ],
         };
 
+        // Semua daftar master dipaginasi + dicari di SQL.
+        $page = $this->mainRepository->catalogPage($section, $search, self::PER_PAGE);
+
         return [...$config, 'section' => $section, 'fields' => $fields,
-            'records' => $this->mainRepository->catalogRecords($section)];
+            'records' => $page->items(), 'search' => $search ?? '',
+            'pagination' => ['current_page' => $page->currentPage(), 'last_page' => $page->lastPage(),
+                'total' => $page->total(), 'per_page' => $page->perPage()]];
     }
 
     public function saveCatalog(string $section, ?int $id, array $data): array

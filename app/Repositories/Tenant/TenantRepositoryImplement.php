@@ -4,8 +4,8 @@ namespace App\Repositories\Tenant;
 
 use App\Models\School;
 use App\Models\SchoolMembership;
-use Itmm\EasyRepository\Implementations\Eloquent;
 use Illuminate\Support\Facades\DB;
+use Itmm\EasyRepository\Implementations\Eloquent;
 
 class TenantRepositoryImplement extends Eloquent implements TenantRepository
 {

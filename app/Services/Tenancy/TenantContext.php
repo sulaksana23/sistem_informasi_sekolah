@@ -18,7 +18,9 @@ use Illuminate\Http\Request;
 final class TenantContext
 {
     public const ATTR_SCHOOL = 'tenant.school';
+
     public const ATTR_ROLE = 'tenant.role';
+
     public const ATTR_MEMBERSHIPS = 'tenant.memberships';
 
     /** Akses konteks yang scope-nya request aktif. */

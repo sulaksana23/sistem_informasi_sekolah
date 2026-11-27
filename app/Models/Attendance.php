@@ -12,9 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['student_enrollment_id', 'attendance_date', 'status', 'note', 'recorded_by'])]
 class Attendance extends Model
 {
-    use HasFactory;
-
     use BelongsToTenant;
+    use HasFactory;
 
     protected function casts(): array
     {

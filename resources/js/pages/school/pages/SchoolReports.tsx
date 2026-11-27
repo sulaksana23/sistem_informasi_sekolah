@@ -29,6 +29,12 @@ const columns: { key: keyof ReportRow; label: string }[] = [
     { key: "present_count", label: "Hadir" }, { key: "absent_count", label: "Sakit / izin / alpa" },
     { key: "average_score", label: "Rata-rata nilai (%)" },
 ];
+/** Cegah CSV/formula injection: nilai teks yang diawali =, +, -, @ diberi apostrof. */
+const csvSafe = (value: unknown) => {
+    const text = String(value);
+    return typeof value === "string" && /^[=+\-@\t\r]/.test(text) ? `'${text}` : text;
+};
+
 export default function SchoolReports(props: Props) {
     const [year, setYear] = useState(String(props.selected_year ?? ""));
     const [schoolClass, setSchoolClass] = useState(String(props.selected_class ?? ""));
@@ -37,7 +43,7 @@ export default function SchoolReports(props: Props) {
     }, { preserveScroll: true, replace: true });
     const downloadCsv = () => {
         const rows = [columns.map((column) => column.label), ...props.summary.rows.map((row) => columns.map((column) => row[column.key] ?? ""))];
-        const csv = rows.map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+        const csv = rows.map((row) => row.map((value) => `"${csvSafe(value).replace(/"/g, '""')}"`).join(",")).join("\r\n");
         const url = URL.createObjectURL(new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }));
         const link = document.createElement("a");
         link.href = url; link.download = "laporan-akademik.csv"; link.click(); URL.revokeObjectURL(url);
