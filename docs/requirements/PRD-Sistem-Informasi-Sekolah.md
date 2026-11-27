@@ -114,4 +114,4 @@ Migrasi `2026_11_06_100002_tenantize_school_tables` membuat tenant awal (nama da
 - Tidak ada UI/e2e endpoint untuk membuat/mengubah tenant dan mengelola keanggotaan — lewat perintah shell saja.
 - Simpanan konteks tidak diperbarui real-time saat keanggotaan dicabut; efeknya muncul pada request berikutnya.
 - Absensi/nilai/penempatan mengacu referensi lintas entitas dalam satu sekolah; belum ada pekerjaan lintas-sekolah (konsolidasi laporan grup) — di luar cakupan MVP.
-- Pengujian fitur tenant belum dibuat (kontrak pekerjaan ini melarang menambah file test).
+- Pengujian fitur baru sebagian: `tests/Feature/School/TenantIsolationTest.php` dan `SchoolProfileTest.php`; modul lain belum punya test.

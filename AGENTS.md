@@ -69,6 +69,22 @@ Aturan kerja:
 
 ### Known deviations (kode lama — jangan ditiru)
 - `routes/example.php` adalah halaman demo/reference dan hanya dilindungi `auth`. Jangan menyalin pola itu untuk modul bisnis atau data sekolah.
+- Domain `school` masih terpusat di satu controller (`SchoolController`), satu service, dan satu repository untuk semua submodul (master, penempatan, absensi, nilai, laporan). Modul baru dipecah per submodul (controller/service/repository sendiri), jangan menambah method ke kelas gabungan ini.
+- Master data (`catalog`) memakai route generik `{section}` dan belum dipaginasi di SQL. Daftar baru wajib paginate/sort/search di server.
+- Frontend `school` belum punya folder `resources/js/api/school/` dengan factory `schoolKeys`; data datang dari props Inertia. Fitur baru yang memakai TanStack Query membuat factory itu dulu.
+
+### Status & kekurangan (per 2026-11-27)
+Sudah ada: tenant + keanggotaan per sekolah, profil sekolah, master CRUD, penempatan, penugasan guru, absensi, nilai, laporan (cetak/CSV), test isolasi tenant & profil sekolah.
+
+Belum ada (urut prioritas):
+1. **Test fitur** untuk master CRUD, penempatan, penugasan, absensi, nilai, laporan, auth, dan Gate per peran (baru 8 test di `tests/Feature/School/`).
+2. **UI kelola anggota & tenant** (undang/ubah peran/cabut anggota, rename sekolah) — masih lewat artisan.
+3. **Reset kata sandi** dan verifikasi email.
+4. **Audit log** perubahan nilai/absensi + kebijakan koreksi nilai; soft delete untuk data siswa/guru.
+5. **Paginasi/pencarian server** untuk daftar siswa/guru dan laporan.
+6. **Semester/kalender akademik & jadwal pelajaran**; portal siswa/wali; import/export Excel data siswa.
+7. **Lokalisasi** konsisten via react-intl (sekarang teks Indonesia langsung).
+8. **Operasional produksi**: backup terjadwal, CI (test + pint + tsc), API auth (belum dibuat).
 
 ## Paseo request workflow
 
